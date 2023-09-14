@@ -1,7 +1,8 @@
 using TSPLIB
 
 module LocalSearch
-    export perform_swap
+    export first_improvement
+
     function node_cost(solution, node, tsp)
         prev = max(1, node-1)
         next = min(length(solution), node+1)
@@ -18,4 +19,24 @@ module LocalSearch
 
         return new_cost - prev_cost
     end
+
+    function first_improvement(solution, tsp, cost, verbose=false)
+        for i in 1:length(solution)
+            for j in i:length(solution)
+                delta = perform_swap(solution, i, j, tsp)
+                if (delta < 0)
+                    if verbose
+                        println("Score improved from $cost to $(cost+delta) by swapping $i and $j")
+                    end
+                    return first_improvement(solution, tsp, cost+delta, verbose)
+                else
+                    perform_swap(solution, j, i, tsp)
+                end
+            end
+        end
+        if verbose 
+            println("Local minimum achieved")
+        end
+        return (solution, cost)
+    end 
 end

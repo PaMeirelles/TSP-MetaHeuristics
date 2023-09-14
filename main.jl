@@ -4,7 +4,7 @@ function constructive_solution(tsp, starting_node)
     remaining_nodes = Set(1:tsp.dimension)
     cost = 0
     delete!(remaining_nodes, starting_node)
-    currentNode = starting_node
+    current_node = starting_node
     solution = [starting_node]
 
     compare_by_value(pair1, pair2) = pair1[2] < pair2[2]
@@ -16,7 +16,7 @@ function constructive_solution(tsp, starting_node)
         min_index = argmin([pair[2] for pair in indexed])
         min_element = indexed[min_index]
         
-        currentNode = min_element[1]
+        current_node = min_element[1]
         cost += min_element[2]
 
         delete!(remaining_nodes, min_element[1])
@@ -24,10 +24,34 @@ function constructive_solution(tsp, starting_node)
     end
     
     cost += tsp.weights[current_node, starting_node]
-    println("Score: $cost")
-    return solution
+    return (solution, cost)
 end
 
-tsp = readTSP("TSP-MetaHeuristics/data/xqf131.tsp")
-startingNode = 1
-sol = constructiveSolution(tsp, startingNode)
+function node_cost(solution, node, tsp)
+    prev = max(1, node-1)
+    next = min(length(solution), node+1)
+
+    return tsp.weights[solution[prev], solution[node]] + tsp.weights[solution[node], solution[next]]
+end
+
+function perform_swap(solution, node_1, node_2, tsp)
+    prev_cost = node_cost(solution, node_1, tsp) + node_cost(solution, node_2, tsp)
+
+    solution[node_1], solution[node_2] = solution[node_2], solution[node_1]
+
+    new_cost = node_cost(solution, node_1, tsp) + node_cost(solution, node_2, tsp)
+
+    return new_cost - prev_cost
+end
+
+tsp = readTSP("data/xqf131.tsp")
+starting_node = 1
+sol, cost = constructive_solution(tsp, starting_node)
+
+println("Solution: ", sol)
+println("Cost: ", cost)
+
+cost += perform_swap(sol, 1, 2, tsp)
+
+println("Solution: ", sol)
+println("Cost: ", cost)

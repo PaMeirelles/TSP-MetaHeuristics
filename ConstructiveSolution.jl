@@ -4,13 +4,13 @@ module ConstructiveSolution
     using ..TSPLIB
     export basicGreedy  
 
-    function basicGreedy(tsp::TSP, startingNode::Int)
-        visitedNodes = [0 for _ in 1:tsp.dimension] 
+    function basicGreedy(tsp::TSP, startingNode::Int)::Tuple{Vector{Int}, Float64}
+        visitedNodes::Vector{Int} = [0 for _ in 1:tsp.dimension]
         cost = 0.0  
         visitedNodes[startingNode] = 1
         visitedNodesCount = 1
         currentNode = startingNode
-        solution = [startingNode]
+        solution::Vector{Int} = [startingNode]
 
         function compareByValue(pair1, pair2)  
             return pair1[2] < pair2[2]

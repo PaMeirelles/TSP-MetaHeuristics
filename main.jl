@@ -1,5 +1,5 @@
-include("constructive_solution.jl")
-include("local_search.jl")
+include("ConstructiveSolution.jl")
+include("LocalSearch.jl")
 
 
 using TSPLIB
@@ -8,7 +8,7 @@ using .LocalSearch
 
 tsp = readTSP("data/xql662.tsp")
 starting_node = 1
-sol, cost = basic_greedy(tsp, starting_node)
+sol, cost = basicGreedy(tsp, starting_node)
 
 println("Solution: ", sol)
 println("Cost: ", cost)

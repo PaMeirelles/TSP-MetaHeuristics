@@ -5,9 +5,10 @@ module ConstructiveSolution
     export basicGreedy  
 
     function basicGreedy(tsp::TSP, startingNode::Int)
-        remainingNodes = Set(1:tsp.dimension)::Set{Int}  
+        visitedNodes = [0 for _ in 1:tsp.dimension] 
         cost = 0.0  
-        delete!(remainingNodes, startingNode)
+        visitedNodes[startingNode] = 1
+        visitedNodesCount = 1
         currentNode = startingNode
         solution = [startingNode]
 
@@ -15,9 +16,9 @@ module ConstructiveSolution
             return pair1[2] < pair2[2]
         end
 
-        while(length(remainingNodes) > 0)
+        while(visitedNodesCount < tsp.dimension)
             row = tsp.weights[currentNode, :]
-            indexed = [(index, value) for (index, value) in enumerate(row) if index in remainingNodes]
+            indexed = [(index, value) for (index, value) in enumerate(row) if visitedNodes[index] == 0]
 
             minIndex = argmin([pair[2] for pair in indexed])
             minElement = indexed[minIndex]
@@ -25,8 +26,9 @@ module ConstructiveSolution
             currentNode = minElement[1]
             cost += minElement[2]
 
-            delete!(remainingNodes, minElement[1])
+            visitedNodes[minElement[1]] = 1
             push!(solution, minElement[1])  
+            visitedNodesCount += 1;
         end
         
         cost += tsp.weights[currentNode, startingNode]

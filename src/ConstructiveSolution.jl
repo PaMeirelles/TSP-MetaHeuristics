@@ -1,8 +1,7 @@
-using TSPLIB
-
-function basicGreedy(tsp::TSP, startingNode::Int)::Tuple{Vector{Int}, Int64}
+function basicGreedy(tsp::TSP)::Tuple{Vector{Int}, Int64}
     visitedNodes::Vector{Int} = [0 for _ in 1:tsp.dimension]
     cost = 0.0  
+    startingNode = 1
     visitedNodes[startingNode] = 1
     visitedNodesCount = 1
     currentNode = startingNode

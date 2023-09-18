@@ -1,30 +1,9 @@
-include("Solution.jl")
-
 DEBUG = true
 
 struct Swap
     data::TSP
     solution::Solution
  end
- 
-function nodeCost(route::Vector{Int}, index::Int64, weights::Matrix{Float64})
-    size = length(route)
-    value = route[index]
-
-    if index == 1 
-        prev = route[size]
-    else
-        prev = route[index - 1]
-    end
-
-    if index == size
-        next = route[1]
-    else
-        next = route[index + 1]
-    end
-    return weights[prev, value] + weights[value, next]
-
-end
 
  function eval(swap::Swap, pos1::Int64, pos2::Int64)::Int64
     route = swap.solution.route
@@ -44,7 +23,7 @@ end
     swap.solution.route[pos1], swap.solution.route[pos2] = swap.solution.route[pos2], swap.solution.route[pos1]
  end
  
- function localSearch!(swap::Swap)::Bool
+ function firstImprovement!(swap::Swap)::Bool
     size = length(swap.solution.route)
      for i in 1:size
         for j in i+1:size 

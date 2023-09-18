@@ -1,20 +1,23 @@
-include("src/ConstructiveSolution.jl")
-include("src/Swap.jl")
-include("src/Solution.jl")
 using TSPLIB
 
-tsp = readTSP("data/xqf131.tsp")
-starting_node = 1
-sol, cost = basicGreedy(tsp, starting_node)
+include("src/ConstructiveSolution.jl")
+include("src/Solution.jl")
+include("src/Swap.jl")
+include("src/Utils.jl")
 
-# println("Solution: ", sol)
-# println("Cost: ", cost)
+function testCase(instance::TSP)
+    sol, cost = basicGreedy(instance)
+    @info "Basic greedy solution" sol cost
+    swap = Swap(instance, Solution(sol, cost))
+    firstImprovement!(swap)
+    @info "First improvement solution" swap.solution.route swap.solution.cost
 
-solution = Solution(sol, cost)
-swap = Swap(tsp, solution)
-
-while localSearch!(swap)
-    ()
+    if (abs(swap.solution.cost - instance.optimal) < 1e-5)
+        @info "Solution is optimal"
+    else
+        @warn "Solution is not optimal"
+    end
 end
 
-
+instance = readTSPLIB(:burma14)
+testCase(instance)

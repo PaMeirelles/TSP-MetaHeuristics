@@ -1,6 +1,6 @@
-include("ConstructiveSolution.jl")
-include("Swap.jl")
-include("Solution.jl")
+include("src/ConstructiveSolution.jl")
+include("src/Swap.jl")
+include("src/Solution.jl")
 using TSPLIB
 
 tsp = readTSP("data/xqf131.tsp")

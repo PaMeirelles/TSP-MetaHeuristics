@@ -1,5 +1,6 @@
 include("Solution.jl")
 
+# localSearch should obey a certain interface. 
 function benchmark(func::Function, localSearch)
     solution = localSearch.solution
     @info "Basic greedy solution" solution.route solution.cost

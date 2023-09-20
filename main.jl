@@ -4,6 +4,7 @@ include("src/ConstructiveSolution.jl")
 include("src/Solution.jl")
 include("src/Swap.jl")
 include("src/Utils.jl")
+include("src/Benchmark.jl")
 
 function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)
@@ -19,5 +20,11 @@ function testCase(instance::TSP)
     end
 end
 
-instance = readTSPLIB(:burma14)
-testCase(instance)
+instance = readTSPLIB(:d657)
+sol, cost = basicGreedy(instance)
+
+swap1 = Swap(instance, Solution(copy(sol), cost))    
+swap2 = Swap(instance, Solution(copy(sol), cost))   
+
+benchmark(firstImprovement!, swap2)
+benchmark(bestImprovement!, swap1)

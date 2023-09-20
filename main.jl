@@ -9,8 +9,8 @@ function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)
     @info "Basic greedy solution" sol cost
     swap = Swap(instance, Solution(sol, cost))
-    firstImprovement!(swap)
-    @info "First improvement solution" swap.solution.route swap.solution.cost
+    bestImprovement!(swap)
+    @info "Best Improvement solution" swap.solution.route swap.solution.cost
 
     if (abs(swap.solution.cost - instance.optimal) < 1e-5)
         @info "Solution is optimal"

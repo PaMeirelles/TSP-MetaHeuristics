@@ -1,4 +1,4 @@
-DEBUG = true
+DEBUG = false
 
 struct Swap
     data::TSP

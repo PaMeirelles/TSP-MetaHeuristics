@@ -20,7 +20,7 @@ function testCase(instance::TSP)
     end
 end
 
-instance = readTSPLIB(:d657)
+instance = readTSPLIB(:pr1002)
 sol, cost = basicGreedy(instance)
 
 swap1 = Swap(instance, Solution(copy(sol), cost))    

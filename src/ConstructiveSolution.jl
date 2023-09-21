@@ -34,7 +34,7 @@ end
 
 function randomPath(tsp::TSP)::Solution
     route::Vector{Int} = shuffle([i for i in 1:tsp.dimension])
-    route = [route ; route[1]]
+    route = [route]
     sol = Solution(route, 0)
     updateCost!(sol, tsp.weights)
     return sol

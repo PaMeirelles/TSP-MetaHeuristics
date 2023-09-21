@@ -1,4 +1,4 @@
-DEBUG = true
+DEBUG = false
 
 struct Swap
     data::TSP
@@ -43,3 +43,33 @@ struct Swap
     end
     return false
  end
+
+ function bestImprovement!(swap::Swap)::Bool
+    bestFrom = nothing
+    bestTo = nothing
+    bestScore = 0
+
+    size = length(swap.solution.route)
+     for i in 1:size
+        for j in i+1:size 
+            delta = eval(swap, i, j)
+            if (delta < bestScore)
+                bestScore = delta
+                bestFrom, bestTo = i, j
+            end
+        end
+    end
+    if bestScore < 0
+        move!(swap, bestFrom, bestTo)
+        if DEBUG
+            println("Score improved $bestScore by swapping $bestFrom and $bestTo")
+        end
+        return true
+    else
+        if DEBUG 
+            println("Local minimum achieved")
+        end
+        return false
+    end
+end
+

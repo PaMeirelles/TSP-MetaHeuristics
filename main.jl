@@ -25,13 +25,10 @@ end
 instance = readTSPLIB(:a280)
 # testCase(instance)
 
-
-sol, cost = basicGreedy(instance)
-
-n1 = Swap(instance, Solution(copy(sol), cost))    
-n2 = Swap(instance, Solution(copy(sol), cost))   
-n3 = TwoOpt(instance, Solution(copy(sol), cost))    
-n4 = TwoOpt(instance, Solution(copy(sol), cost))  
+n1 = Swap(instance, basicGreedy(instance))    
+n2 = Swap(instance, basicGreedy(instance))   
+n3 = TwoOpt(instance, basicGreedy(instance))    
+n4 = TwoOpt(instance, basicGreedy(instance))  
 
 benchmark(firstImprovement!, n1)
 benchmark(bestImprovement!, n2)

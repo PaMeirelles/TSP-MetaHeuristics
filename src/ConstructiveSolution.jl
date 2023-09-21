@@ -75,5 +75,6 @@ function cheapestInsertion(tsp::TSP)::Solution
         cost += tsp.weights[currNode, next]
         push!(route, next)
     end
+    cost += tsp.weights[first(route), last(route)]
     return Solution(route, cost)
 end

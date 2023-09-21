@@ -6,6 +6,8 @@ include("src/Swap.jl")
 include("src/Utils.jl")
 include("src/Benchmark.jl")
 include("src/TwoOpt.jl")
+include("src/Relocate.jl")
+
 
 function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)
@@ -22,15 +24,17 @@ function testCase(instance::TSP)
     end
 end
 
-instance = readTSPLIB(:a280)
+instance = readTSPLIB(:burma14)
 # testCase(instance)
 
 n1 = Swap(instance, basicGreedy(instance))    
 n2 = Swap(instance, basicGreedy(instance))   
 n3 = TwoOpt(instance, basicGreedy(instance))    
-n4 = TwoOpt(instance, basicGreedy(instance))  
+n4 = TwoOpt(instance, basicGreedy(instance))
+n5 = Relocate(instance, basicGreedy(instance))
 
 benchmark(firstImprovement!, n1)
 benchmark(bestImprovement!, n2)
 benchmark(firstImprovement!, n3)
 benchmark(bestImprovement!, n4)
+benchmark(firstImprovement!, n5)

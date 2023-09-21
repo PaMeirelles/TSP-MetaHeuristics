@@ -1,12 +1,11 @@
 include("Solution.jl")
 
-# localSearch should obey a certain interface. 
-function benchmark(func::Function, localSearch)
+function benchmark(method::Function, localSearch::Union{Swap, TwoOpt})
     solution = localSearch.solution
     @info "Basic greedy solution" solution.route solution.cost
     startingCost = solution.cost
 
-    while(func(localSearch))
+    while(method(localSearch))
         ()
     end
     updateCost!(localSearch.solution, localSearch.data.weights)

@@ -1,4 +1,5 @@
 using TSPLIB
+using UnionFind
 
 include("src/ConstructiveSolution.jl")
 include("src/Solution.jl")
@@ -31,6 +32,9 @@ sol, cost = basicGreedy(instance)
 
 solution = randomPath(instance)
 @info "Random Path" solution.route solution.cost
+
+cheap = cheapestInsertion(instance)
+@info "Cheapest Insertion" cheap.route cheap.cost
 
 # n1 = Swap(instance, Solution(copy(sol), cost))    
 # n2 = Swap(instance, Solution(copy(sol), cost))   

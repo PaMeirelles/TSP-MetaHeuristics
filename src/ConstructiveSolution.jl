@@ -38,3 +38,42 @@ function randomPath(tsp::TSP)::Solution
     updateCost!(sol, tsp.weights)
     return sol
 end
+
+function cheapestInsertion(tsp::TSP)::Solution
+    edges::Vector{Edge} = [Edge(i, j, tsp.weights[i,j]) for i in 1:tsp.dimension for j in i+1:tsp.dimension]
+    sort!(edges, by= e -> e.Weight)
+
+    degrees::Vector{Int64} = [0 for _ in 1:tsp.dimension]
+    
+    solution::Vector{Vector{Int64}} = [[] for _ in 1:tsp.dimension]
+    cost = 0
+
+    ccTracker::UnionFinder = UnionFinder(tsp.dimension)
+
+    for edge in edges
+        if degrees[edge.NodeA] >= 2 || degrees[edge.NodeB] >= 2
+            continue
+        end
+
+        if find!(ccTracker, edge.NodeA) == find!(ccTracker, edge.NodeB)
+            continue
+        else
+            union!(ccTracker, edge.NodeA, edge.NodeB)
+        end
+        push!(solution[edge.NodeA], edge.NodeB)
+        push!(solution[edge.NodeB], edge.NodeA)
+
+        degrees[edge.NodeA] += 1
+        degrees[edge.NodeB] += 1
+    end
+
+    route::Vector{Int64} = [[x for x in 1:tsp.dimension if degrees[x] == 1][1]]
+    for _ in 2:tsp.dimension
+        currNode = last(route)
+        next = [x for x in solution[currNode] if x != currNode][1]
+        
+        cost += tsp.weights[currNode, next]
+        push!(route, next)
+    end
+    return Solution(route, cost)
+end

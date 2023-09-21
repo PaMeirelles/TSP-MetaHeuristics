@@ -1,3 +1,9 @@
+struct Edge
+    NodeA::Int64
+    NodeB::Int64
+    Weight::Float64
+end
+
 function nodeCost(route::Vector{Int}, index::Int64, weights::Matrix{Float64})::Float64
     size = length(route)
     value = route[index]

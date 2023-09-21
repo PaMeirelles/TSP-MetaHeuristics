@@ -1,3 +1,5 @@
+using Random
+
 function basicGreedy(tsp::TSP)::Tuple{Vector{Int}, Int64}
     visitedNodes::Vector{Int} = [0 for _ in 1:tsp.dimension]
     cost = 0.0  
@@ -31,7 +33,7 @@ function basicGreedy(tsp::TSP)::Tuple{Vector{Int}, Int64}
 end
 
 function randomPath(tsp::TSP)::Solution
-    route::Vector{Int} = [i for i in range(tsp.dimension)]
+    route::Vector{Int} = shuffle([i for i in 1:tsp.dimension])
     sol = Solution(route, 0)
     updateCost!(sol, tsp.weights)
     return sol

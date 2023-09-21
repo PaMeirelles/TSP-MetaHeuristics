@@ -27,13 +27,17 @@ instance = readTSPLIB(:a280)
 
 
 sol, cost = basicGreedy(instance)
+@info "Basic greedy solution" sol cost
 
-n1 = Swap(instance, Solution(copy(sol), cost))    
-n2 = Swap(instance, Solution(copy(sol), cost))   
-n3 = TwoOpt(instance, Solution(copy(sol), cost))    
-n4 = TwoOpt(instance, Solution(copy(sol), cost))  
+solution = randomPath(instance)
+@info "Random Path" solution.route solution.cost
 
-benchmark(firstImprovement!, n1)
-benchmark(bestImprovement!, n2)
-benchmark(firstImprovement!, n3)
-benchmark(bestImprovement!, n4)
+# n1 = Swap(instance, Solution(copy(sol), cost))    
+# n2 = Swap(instance, Solution(copy(sol), cost))   
+# n3 = TwoOpt(instance, Solution(copy(sol), cost))    
+# n4 = TwoOpt(instance, Solution(copy(sol), cost))  
+
+# benchmark(firstImprovement!, n1)
+# benchmark(bestImprovement!, n2)
+# benchmark(firstImprovement!, n3)
+# benchmark(bestImprovement!, n4)

@@ -4,8 +4,8 @@ include("src/ConstructiveSolution.jl")
 include("src/Solution.jl")
 include("src/Swap.jl")
 include("src/Utils.jl")
-include("src/Benchmark.jl")
 include("src/TwoOpt.jl")
+include("src/Benchmark.jl")
 
 function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)
@@ -23,19 +23,11 @@ function testCase(instance::TSP)
 end
 
 instance = readTSPLIB(:a280)
-# testCase(instance)
 
-
-sol, cost = basicGreedy(instance)
-@info "Basic greedy solution" sol cost
-
-solution = randomPath(instance)
-@info "Random Path" solution.route solution.cost
-
-# n1 = Swap(instance, Solution(copy(sol), cost))    
-# n2 = Swap(instance, Solution(copy(sol), cost))   
-# n3 = TwoOpt(instance, Solution(copy(sol), cost))    
-# n4 = TwoOpt(instance, Solution(copy(sol), cost))  
+# n1 = Swap(instance, basicGreedy(instance))    
+# n2 = Swap(instance, basicGreedy(instance))   
+# n3 = TwoOpt(instance, basicGreedy(instance))    
+# n4 = TwoOpt(instance, basicGreedy(instance))  
 
 # benchmark(firstImprovement!, n1)
 # benchmark(bestImprovement!, n2)

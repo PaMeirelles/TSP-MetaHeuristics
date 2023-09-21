@@ -27,5 +27,5 @@ function basicGreedy(tsp::TSP)::Solution
     end
     
     cost += tsp.weights[currentNode, startingNode]
-    return Solution(copy(route), cost)
+    return Solution(route, cost)
 end

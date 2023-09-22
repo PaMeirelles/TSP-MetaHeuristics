@@ -7,6 +7,8 @@ include("src/Utils.jl")
 include("src/Benchmark.jl")
 include("src/TwoOpt.jl")
 include("src/Relocate.jl")
+include("src/Relocate.jl")
+
 
 function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)

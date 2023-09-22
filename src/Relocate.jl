@@ -1,3 +1,4 @@
+DEBUG = true
 struct Relocate
     data::TSP
     solution::Solution

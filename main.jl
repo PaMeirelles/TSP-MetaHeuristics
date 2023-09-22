@@ -7,6 +7,7 @@ include("src/Swap.jl")
 include("src/Utils.jl")
 include("src/TwoOpt.jl")
 include("src/Benchmark.jl")
+include("src/Relocate.jl")
 
 function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)
@@ -23,7 +24,7 @@ function testCase(instance::TSP)
     end
 end
 
-instance = readTSPLIB(:a280)
+instance = readTSPLIB(:eil101)
 # testCase(instance)
 
 
@@ -36,12 +37,12 @@ solution = randomPath(instance)
 cheap = cheapestInsertion(instance)
 @info "Cheapest Insertion" cheap.route cheap.cost
 
-# n1 = Swap(instance, Solution(copy(sol), cost))    
-# n2 = Swap(instance, Solution(copy(sol), cost))   
-# n3 = TwoOpt(instance, Solution(copy(sol), cost))    
-# n4 = TwoOpt(instance, Solution(copy(sol), cost))  
+# n1 = Swap(instance, basicGreedy(instance))    
+# n2 = Swap(instance, basicGreedy(instance))   
+# n3 = TwoOpt(instance, basicGreedy(instance))    
+# n4 = TwoOpt(instance, basicGreedy(instance))  
+n5 = Relocate(instance, basicGreedy(instance))    
+n6 = Relocate(instance, basicGreedy(instance))  
 
-# benchmark(firstImprovement!, n1)
-# benchmark(bestImprovement!, n2)
-# benchmark(firstImprovement!, n3)
-# benchmark(bestImprovement!, n4)
+benchmark(firstImprovement!, n5)
+benchmark(bestImprovement!, n6)

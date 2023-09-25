@@ -1,4 +1,3 @@
-DEBUG = true
 struct Relocate
     data::TSP
     solution::Solution
@@ -29,10 +28,10 @@ struct Relocate
  end
  
  function firstImprovement!(relocate::Relocate)::Bool
-    size = length(relocate.solution.route)
-    for i in 1:size
+    size = length(relocate.solution.route)-1
+    for i in 2:size
        # We cannot start at i+1, since move(i, j) is not the same from move(j,i)
-       for j in 1:size
+       for j in 2:size
             # However, we can skip i=j and i+1 = j
             if i==j || (i%size)+1 == j
                 continue
@@ -59,10 +58,10 @@ end
     bestTo = nothing
     bestScore = 0
 
-    size = length(relocate.solution.route)
-     for i in 1:size
+    size = length(relocate.solution.route)-1
+     for i in 2:size
         # Same reasoning as firstImprovement
-        for j in 1:size 
+        for j in 2:size 
             if i==j || (i%size)+1 == j
                 continue
             end

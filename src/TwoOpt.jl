@@ -1,5 +1,3 @@
-DEBUG = false
-
 struct TwoOpt
     data::TSP
     solution::Solution
@@ -23,8 +21,8 @@ struct TwoOpt
  end
  
  function firstImprovement!(twoOpt::TwoOpt)::Bool
-    size = length(twoOpt.solution.route)
-     for i in 1:size
+    size = length(twoOpt.solution.route)-1
+     for i in 2:size
         # We can start at i+2, since performing a 2opt between adjacent nodes does nothing
         for j in i+2:size 
             delta = eval(twoOpt, i, j)
@@ -49,8 +47,8 @@ struct TwoOpt
     bestTo = nothing
     bestScore = 0
 
-    size = length(twoOpt.solution.route)
-     for i in 1:size
+    size = length(twoOpt.solution.route)-1
+     for i in 2:size
         # Same reasoning as firstImprovement
         for j in i+2:size 
             delta = eval(twoOpt, i, j)

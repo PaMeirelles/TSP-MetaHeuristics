@@ -1,13 +1,15 @@
 using TSPLIB
 using UnionFind
 
+DEBUG = true
+
 include("src/ConstructiveSolution.jl")
 include("src/Solution.jl")
 include("src/Swap.jl")
 include("src/Utils.jl")
 include("src/TwoOpt.jl")
-include("src/Benchmark.jl")
 include("src/Relocate.jl")
+include("src/Benchmark.jl")
 
 function testCase(instance::TSP)
     sol, cost = basicGreedy(instance)
@@ -28,21 +30,25 @@ instance = readTSPLIB(:eil101)
 # testCase(instance)
 
 
-sol, cost = basicGreedy(instance)
-@info "Basic greedy solution" sol cost
+solution = basicGreedy(instance)
+# @info "Basic greedy solution" solution.route solution.cost
 
-solution = randomPath(instance)
-@info "Random Path" solution.route solution.cost
+# solution = randomPath(instance)
+# @info "Random Path" solution.route solution.cost
 
-cheap = cheapestInsertion(instance)
-@info "Cheapest Insertion" cheap.route cheap.cost
+# cheap = cheapestInsertion(instance)
+# @info "Cheapest Insertion" cheap.route cheap.cost
 
-# n1 = Swap(instance, basicGreedy(instance))    
-# n2 = Swap(instance, basicGreedy(instance))   
-# n3 = TwoOpt(instance, basicGreedy(instance))    
-# n4 = TwoOpt(instance, basicGreedy(instance))  
+n1 = Swap(instance, basicGreedy(instance))    
+n2 = Swap(instance, basicGreedy(instance))   
+n3 = TwoOpt(instance, basicGreedy(instance))    
+n4 = TwoOpt(instance, basicGreedy(instance))  
 n5 = Relocate(instance, basicGreedy(instance))    
 n6 = Relocate(instance, basicGreedy(instance))  
 
+benchmark(firstImprovement!, n1)
+benchmark(bestImprovement!, n2)
+benchmark(firstImprovement!, n3)
+benchmark(bestImprovement!, n4)
 benchmark(firstImprovement!, n5)
 benchmark(bestImprovement!, n6)

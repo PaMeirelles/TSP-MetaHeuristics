@@ -1,7 +1,7 @@
 using TSPLIB
 using UnionFind
 
-DEBUG = true
+DEBUG = false
 
 include("src/ConstructiveSolution.jl")
 include("src/Solution.jl")
@@ -10,45 +10,44 @@ include("src/Utils.jl")
 include("src/TwoOpt.jl")
 include("src/Relocate.jl")
 include("src/Benchmark.jl")
+include("src/ShuffleSublist.jl")
 
 function testCase(instance::TSP)
-    sol, cost = basicGreedy(instance)
-    @info "Basic greedy solution" sol cost
-    neighbour = TwoOpt(instance, Solution(sol, cost))
-    bestImprovement!(neighbour)
-    updateCost!(neighbour.solution, neighbour.data.weights)
-    @info "Best Improvement solution" neighbour.solution.route neighbour.solution.cost
+    sol = basicGreedy(instance)
+    @info "Basic greedy solution" sol
 
-    if (abs(neighbour.solution.cost - instance.optimal) < 1e-5)
+    n1 = TwoOpt(instance, sol)
+    n2 = Swap(instance, sol)
+    n3 = Relocate(instance, sol)
+
+    disturb = ShuffleSublist(instance, sol)
+
+    bestSol = deepcopy(sol)
+
+    for _ in 1:100
+
+        while ( bestImprovement!(n1) || bestImprovement!(n2) || bestImprovement!(n3))
+            updateCost!(n1.solution, n1.data.weights)
+        end
+
+        
+        if n1.solution.cost < bestSol.cost 
+            @info "Best Improvement solution" n1.solution.route n1.solution.cost
+            bestSol = deepcopy(sol)
+        else
+            sol = deepcopy(bestSol)
+        end
+
+        perform_operation!(disturb)
+    end
+
+    if (abs(n1.solution.cost - instance.optimal) < 1e-5)
         @info "Solution is optimal"
     else
         @warn "Solution is not optimal"
     end
 end
 
-instance = readTSPLIB(:eil101)
-# testCase(instance)
+instance = readTSPLIB(:a280)
 
-
-solution = basicGreedy(instance)
-# @info "Basic greedy solution" solution.route solution.cost
-
-# solution = randomPath(instance)
-# @info "Random Path" solution.route solution.cost
-
-# cheap = cheapestInsertion(instance)
-# @info "Cheapest Insertion" cheap.route cheap.cost
-
-n1 = Swap(instance, basicGreedy(instance))    
-n2 = Swap(instance, basicGreedy(instance))   
-n3 = TwoOpt(instance, basicGreedy(instance))    
-n4 = TwoOpt(instance, basicGreedy(instance))  
-n5 = Relocate(instance, basicGreedy(instance))    
-n6 = Relocate(instance, basicGreedy(instance))  
-
-benchmark(firstImprovement!, n1)
-benchmark(bestImprovement!, n2)
-benchmark(firstImprovement!, n3)
-benchmark(bestImprovement!, n4)
-benchmark(firstImprovement!, n5)
-benchmark(bestImprovement!, n6)
+testCase(instance)

@@ -29,14 +29,15 @@ function basicGreedy(tsp::TSP)::Solution
     end
     
     cost += tsp.weights[currentNode, startingNode]
+    convertRepresentation!(route)
     return Solution(route, cost)
 end
 
 function randomPath(tsp::TSP)::Solution
     route::Vector{Int} = shuffle([i for i in 1:tsp.dimension])
-    route = [route]
     sol = Solution(route, 0)
     updateCost!(sol, tsp.weights)
+    convertRepresentation!(route)
     return sol
 end
 
@@ -67,15 +68,18 @@ function cheapestInsertion(tsp::TSP)::Solution
         degrees[edge.NodeA] += 1
         degrees[edge.NodeB] += 1
     end
-
     route::Vector{Int64} = [[x for x in 1:tsp.dimension if degrees[x] == 1][1]]
+    currNode = last(route)
     for _ in 2:tsp.dimension
-        currNode = last(route)
-        next = [x for x in solution[currNode] if x != currNode][1]
-        
+        next = [x for x in solution[last(route)] if x != currNode][1]
         cost += tsp.weights[currNode, next]
+        currNode = last(route)
         push!(route, next)
+
     end
     cost += tsp.weights[first(route), last(route)]
+
+    convertRepresentation!(route)
+
     return Solution(route, cost)
 end

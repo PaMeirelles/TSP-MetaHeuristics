@@ -1,5 +1,3 @@
-DEBUG = false
-
 struct Swap
     data::TSP
     solution::Solution
@@ -22,8 +20,8 @@ struct Swap
  end
  
  function firstImprovement!(swap::Swap)::Bool
-    size = length(swap.solution.route)
-     for i in 1:size
+    size = length(swap.solution.route) - 1
+     for i in 2:size
         for j in i+1:size 
             delta = eval(swap, i, j)
             if (delta < 0)
@@ -47,8 +45,8 @@ struct Swap
     bestTo = nothing
     bestScore = 0
 
-    size = length(swap.solution.route)
-     for i in 1:size
+    size = length(swap.solution.route) - 1
+     for i in 2:size
         for j in i+1:size 
             delta = eval(swap, i, j)
             if (delta < bestScore)

@@ -15,3 +15,8 @@ end
 function nodeCost(route::Vector{Int}, index::Int64, weights::Matrix{Float64})::Float64
     return weights[prev(route, index), route[index]] + weights[route[index], next(route, index)]
 end
+
+function convertRepresentation!(route::Vector{Int})
+    indexFirstNode = findfirst(elem -> elem == 1, route)
+    route = [route[indexFirstNode:end]; route[begin:indexFirstNode]]
+end

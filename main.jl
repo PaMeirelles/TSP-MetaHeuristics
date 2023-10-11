@@ -50,6 +50,6 @@ function testCase(instance::TSP)
 
 end
 
-instance = readTSPLIB(:eil76)
+instance = readTSPLIB(:a280)
 
 testCase(instance)

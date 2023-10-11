@@ -18,5 +18,7 @@ end
 
 function convertRepresentation!(route::Vector{Int})
     indexFirstNode = findfirst(elem -> elem == 1, route)
-    route = [route[indexFirstNode:end]; route[begin:indexFirstNode]]
+    route[:] = vcat(route[indexFirstNode:end], route[begin:indexFirstNode-1])
+    push!(route, 1)
+    println("inside func", route)
 end

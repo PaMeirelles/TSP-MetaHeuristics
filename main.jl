@@ -38,8 +38,8 @@ function testCase(instance::TSP)
             bestSol = deepcopy(n1.solution)
         end
         sol = deepcopy(bestSol)
-        disturb = ShuffleSublist(instance, sol)
-        perform_operation!(disturb)
+        disturb = ShuffleSublist(instance, sol, 10)
+        simple_shuffle!(disturb)
         updateCost!(sol, instance.weights)
         n1 = TwoOpt(instance, sol)
         n2 = Swap(instance, sol)
@@ -50,6 +50,6 @@ function testCase(instance::TSP)
 
 end
 
-instance = readTSPLIB(:gr96)
+instance = readTSPLIB(:eil76)
 
 testCase(instance)

@@ -56,8 +56,10 @@ function testCase(instance::TSP)
 
         if it < 80
             simple_shuffle!(disturb)
-        else
+        elseif it < 240
             shuffle_and_move!(disturb)
+        else
+            full_shuffle!(disturb)
         end
 
         updateCost!(sol, instance.weights)

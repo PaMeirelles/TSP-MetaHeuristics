@@ -49,3 +49,10 @@ function shuffle_and_move!(ss::ShuffleSublist)
     route[:] = vcat(route[1+gap_size:gap_size+x], route[1:gap_size], route[gap_size+x+1:n]) 
     convertRepresentation!(route)
 end
+
+function full_shuffle!(ss::ShuffleSublist)
+    route = ss.solution.route
+    pop!(route)
+    shuffle!(route)
+    convertRepresentation!(route)
+end

@@ -38,7 +38,7 @@ function shuffle_and_move!(ss::ShuffleSublist)
 
     i = rand(1:n-gap)
     gap_size = rand(gap:n)
-    j = (i + gap_size) % n
+    j = ((i + gap_size - 1) % n) + 1
     if i > j
         route[:] = vcat(route[i:n], route[1:j-1], route[j:i-1])
     else

@@ -54,7 +54,7 @@ function testCase(instance::TSP)
 
         disturb = ShuffleSublist(instance, sol, 60)
 
-        if it < 80
+        if it < 0
             simple_shuffle!(disturb)
         else
             shuffle_and_move!(disturb)

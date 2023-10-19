@@ -21,3 +21,8 @@ function convertRepresentation!(route::Vector{Int})
     route[:] = vcat(route[indexFirstNode:end], route[begin:indexFirstNode-1])
     push!(route, 1)
 end
+
+function log(msg::String)
+    timestamp = Dates.now()
+    println("[$(Dates.format(timestamp, "yyyy-mm-dd HH:MM:SS"))] $msg")
+end

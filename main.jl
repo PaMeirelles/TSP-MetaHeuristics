@@ -1,5 +1,7 @@
 using TSPLIB
 using UnionFind
+using Printf
+using Dates
 
 DEBUG = false
 
@@ -11,6 +13,7 @@ include("src/TwoOpt.jl")
 include("src/Relocate.jl")
 include("src/Benchmark.jl")
 include("src/ShuffleSublist.jl")
+
 
 function testCase(instance::TSP)
     sol = basicGreedy(instance)
@@ -28,7 +31,7 @@ function testCase(instance::TSP)
     it = 0
     max_iter = 10000
     while it < max_iter
-        println(it)        
+        log(@sprintf("Iteration %d", it))        
         ns = [n1, n2, n3]
         shuffle!(ns)
         while ( bestImprovement!(ns[1]) || bestImprovement!(ns[2]) || bestImprovement!(ns[3]))
@@ -37,6 +40,7 @@ function testCase(instance::TSP)
  
         if n1.solution.cost < bestSol.cost 
             @info "Best Improvement solution" n1.solution.route n1.solution.cost
+            log(@sprintf("New best: %d", n1.solution.cost))
             if (abs(n1.solution.cost - instance.optimal) < 1e-5)
                 @info "Solution is optimal"
                 break

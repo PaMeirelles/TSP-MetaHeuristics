@@ -14,6 +14,10 @@ include("src/ShuffleSublist.jl")
 
 function testCase(instance::TSP)
     sol = basicGreedy(instance)
+    
+    output_file = open("output.txt", "w")
+
+    redirect_stdout(output_file)
     @info "Basic greedy solution" sol
 
     n1 = TwoOpt(instance, sol)

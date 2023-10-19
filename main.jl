@@ -21,9 +21,13 @@ function testCase(instance::TSP)
     n3 = Relocate(instance, sol)
 
     bestSol = deepcopy(sol)
-
-    while true
-        while ( bestImprovement!(n1) || bestImprovement!(n3) || bestImprovement!(n2))
+    it = 0
+    max_iter = 10000
+    while it < max_iter
+        println(it)        
+        ns = [n1, n2, n3]
+        shuffle!(ns)
+        while ( bestImprovement!(ns[1]) || bestImprovement!(ns[2]) || bestImprovement!(ns[3]))
             updateCost!(n1.solution, n1.data.weights)
         end
  
@@ -36,20 +40,27 @@ function testCase(instance::TSP)
                 @warn "Solution is not optimal"
             end
             bestSol = deepcopy(n1.solution)
+            it = 0
         end
         sol = deepcopy(bestSol)
-        disturb = ShuffleSublist(instance, sol, 10)
-        simple_shuffle!(disturb)
+
+        disturb = ShuffleSublist(instance, sol, 60)
+
+        if it < 80
+            simple_shuffle!(disturb)
+        else
+            shuffle_and_move!(disturb)
+        end
+
         updateCost!(sol, instance.weights)
         n1 = TwoOpt(instance, sol)
         n2 = Swap(instance, sol)
         n3 = Relocate(instance, sol)
-
-        updateCost!(n1.solution, n1.data.weights)
+        it += 1
     end
 
 end
 
-instance = readTSPLIB(:a280)
+instance = readTSPLIB(:ch130)
 
 testCase(instance)

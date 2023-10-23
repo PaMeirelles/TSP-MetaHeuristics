@@ -1,4 +1,4 @@
-struct Swap
+mutable struct Swap
     data::TSP
     solution::Solution
  end

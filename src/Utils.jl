@@ -22,7 +22,9 @@ function convertRepresentation!(route::Vector{Int})
     push!(route, 1)
 end
 
-function log(msg::String)
+function logAndPrint(logfile, msg)
     timestamp = Dates.now()
     println("[$(Dates.format(timestamp, "yyyy-mm-dd HH:MM:SS"))] $msg")
+    println(msg)
+    write(logfile, msg * "\n")
 end

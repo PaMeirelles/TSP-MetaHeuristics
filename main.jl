@@ -13,14 +13,14 @@ include("src/TwoOpt.jl")
 include("src/Relocate.jl")
 include("src/Benchmark.jl")
 include("src/ShuffleSublist.jl")
+include("src/StageDisturb.jl")
 
 
 function testCase(instance::TSP)
+    logfile = open("log.txt", "a")
+
     sol = basicGreedy(instance)
     
-    output_file = open("output.txt", "w")
-
-    redirect_stdout(output_file)
     @info "Basic greedy solution" sol
 
     n1 = TwoOpt(instance, sol)
@@ -31,7 +31,7 @@ function testCase(instance::TSP)
     it = 0
     max_iter = 10000
     while it < max_iter
-        log(@sprintf("Iteration %d", it))        
+        logAndPrint(logfile, @sprintf("Iteration %d", it))        
         ns = [n1, n2, n3]
         shuffle!(ns)
         while ( bestImprovement!(ns[1]) || bestImprovement!(ns[2]) || bestImprovement!(ns[3]))
@@ -40,7 +40,7 @@ function testCase(instance::TSP)
  
         if n1.solution.cost < bestSol.cost 
             @info "Best Improvement solution" n1.solution.route n1.solution.cost
-            log(@sprintf("New best: %d", n1.solution.cost))
+            logAndPrint(logfile, @sprintf("New best: %d", n1.solution.cost))
             if (abs(n1.solution.cost - instance.optimal) < 1e-5)
                 @info "Solution is optimal"
                 break
@@ -74,3 +74,9 @@ end
 instance = readTSPLIB(:ch130)
 
 testCase(instance)
+
+sol = basicGreedy(instance)
+sd = StageDisturb(instance, basicGreedy, [TwoOpt(instance, sol), Swap(instance, sol), Relocate(instance, sol)], 0, [120, 600, 3000],
+ [simple_shuffle!, shuffle_and_move!, full_shuffle!], 60)
+
+iteratedLocalSearch(sd)

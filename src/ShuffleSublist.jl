@@ -1,6 +1,6 @@
 using Random
 
-struct ShuffleSublist
+mutable struct ShuffleSublist
     data::TSP
     solution::Solution
     gap::Int

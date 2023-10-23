@@ -1,4 +1,4 @@
-struct TwoOpt
+mutable struct TwoOpt
     data::TSP
     solution::Solution
  end

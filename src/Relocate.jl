@@ -1,4 +1,4 @@
-struct Relocate
+mutable struct Relocate
     data::TSP
     solution::Solution
  end

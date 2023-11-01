@@ -1,4 +1,4 @@
-struct StageDisturb
+mutable struct StageDisturb
     data::TSP
     solution::Solution
     neighbourSearch::Vector{Any}
@@ -20,27 +20,35 @@ struct StageDisturb
     disturb = ShuffleSublist(instance, sol, stageDisturb.gap)
 
     while stageDisturb.currentIteration < maxIter
-        logAndPrint(logfile, @sprintf("Iteration %d", it))        
-        shuffle!(stageDisturb.neighbourSearch)
-        for ns in stageDisturb.neighbourSearch
-            if ns()
-                updateCost!(ns.solution, ns.data.weights)
-                break
-            else 
-                updateCost!(ns.solution, ns.data.weights)
+        logAndPrint(logfile, @sprintf("Iteration %d", sd.currentIteration))
+
+        room_to_improve = true
+        while room_to_improve
+            room_to_improve = false
+            shuffle!(stageDisturb.neighbourSearch)
+            for ns in stageDisturb.neighbourSearch
+                if bestImprovement!(ns)
+                    room_to_improve = true
+                    updateCost!(ns.solution, ns.data.weights)
+                    break
+                else 
+                    updateCost!(ns.solution, ns.data.weights)
+                end
             end
         end
- 
-        if ns.solution.cost < bestSol.cost 
-            @info "Best Improvement solution" ns.solution.route ns.solution.cost
-            logAndPrint(logfile, @sprintf("New best: %d", ns.solution.cost))
-            if (abs(ns.solution.cost - instance.optimal) < 1e-5)
+
+        currSol = stageDisturb.neighbourSearch[1].solution
+
+        if currSol.cost < bestSol.cost 
+            @info "Best Improvement solution" currSol.route currSol.cost
+            logAndPrint(logfile, @sprintf("New best: %d", currSol.cost))
+            if (abs(currSol.cost - instance.optimal) < 1e-5)
                 @info "Solution is optimal"
                 break
             else
                 @warn "Solution is not optimal"
             end
-            bestSol = deepcopy(ns.solution)
+            bestSol = deepcopy(currSol)
             stageDisturb.currentIteration = 0
         end
 
@@ -48,7 +56,7 @@ struct StageDisturb
 
         disturb.solution = sol
 
-        for i in 1..(stageDisturb.stageThresholds.length) 
+        for i in 1:(length(stageDisturb.stageThresholds)) 
             if stageDisturb.currentIteration < stageDisturb.stageThresholds[i]
                 stageDisturb.disturbFunctions[i](disturb)
                 break
@@ -57,7 +65,7 @@ struct StageDisturb
         updateCost!(sol, instance.weights)
         
         for ns in stageDisturb.neighbourSearch
-            ns.solution = sol
+            ns.solution = deepcopy(sol)
         end
 
         stageDisturb.currentIteration += 1

@@ -15,68 +15,10 @@ include("src/Benchmark.jl")
 include("src/ShuffleSublist.jl")
 include("src/StageDisturb.jl")
 
-
-function testCase(instance::TSP)
-    logfile = open("log.txt", "a")
-
-    sol = basicGreedy(instance)
-    
-    @info "Basic greedy solution" sol
-
-    n1 = TwoOpt(instance, sol)
-    n2 = Swap(instance, sol)
-    n3 = Relocate(instance, sol)
-
-    bestSol = deepcopy(sol)
-    it = 0
-    max_iter = 10000
-    while it < max_iter
-        logAndPrint(logfile, @sprintf("Iteration %d", it))        
-        ns = [n1, n2, n3]
-        shuffle!(ns)
-        while ( bestImprovement!(ns[1]) || bestImprovement!(ns[2]) || bestImprovement!(ns[3]))
-            updateCost!(n1.solution, n1.data.weights)
-        end
- 
-        if n1.solution.cost < bestSol.cost 
-            @info "Best Improvement solution" n1.solution.route n1.solution.cost
-            logAndPrint(logfile, @sprintf("New best: %d", n1.solution.cost))
-            if (abs(n1.solution.cost - instance.optimal) < 1e-5)
-                @info "Solution is optimal"
-                break
-            else
-                @warn "Solution is not optimal"
-            end
-            bestSol = deepcopy(n1.solution)
-            it = 0
-        end
-        sol = deepcopy(bestSol)
-
-        disturb = ShuffleSublist(instance, sol, 60)
-
-        if it < 80
-            simple_shuffle!(disturb)
-        elseif it < 240
-            shuffle_and_move!(disturb)
-        else
-            full_shuffle!(disturb)
-        end
-
-        updateCost!(sol, instance.weights)
-        n1 = TwoOpt(instance, sol)
-        n2 = Swap(instance, sol)
-        n3 = Relocate(instance, sol)
-        it += 1
-    end
-
-end
-
 instance = readTSPLIB(:ch130)
 
-testCase(instance)
-
 sol = basicGreedy(instance)
-sd = StageDisturb(instance, basicGreedy, [TwoOpt(instance, sol), Swap(instance, sol), Relocate(instance, sol)], 0, [120, 600, 3000],
+sd = StageDisturb(instance, sol, [TwoOpt(instance, sol), Swap(instance, sol), Relocate(instance, sol)], 0, [250, 1000, 4000],
  [simple_shuffle!, shuffle_and_move!, full_shuffle!], 60)
 
 iteratedLocalSearch(sd)

@@ -24,6 +24,7 @@ end
 
 function logAndPrint(logfile, msg)
     timestamp = Dates.now()
-    println("[$(Dates.format(timestamp, "yyyy-mm-dd HH:MM:SS"))] $msg")
-    write(logfile, msg * "\n")
+    stampedMessage = "[$(Dates.format(timestamp, "yyyy-mm-dd HH:MM:SS"))] $msg"
+    println(stampedMessage)
+    write(logfile, stampedMessage * "\n")
 end

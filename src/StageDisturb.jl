@@ -31,8 +31,6 @@ mutable struct StageDisturb
                     room_to_improve = true
                     updateCost!(ns.solution, ns.data.weights)
                     break
-                else 
-                    updateCost!(ns.solution, ns.data.weights)
                 end
             end
         end

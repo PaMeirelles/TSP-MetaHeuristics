@@ -18,5 +18,13 @@ end
 
 function convertRepresentation!(route::Vector{Int})
     indexFirstNode = findfirst(elem -> elem == 1, route)
-    route = [route[indexFirstNode:end]; route[begin:indexFirstNode]]
+    route[:] = vcat(route[indexFirstNode:end], route[begin:indexFirstNode-1])
+    push!(route, 1)
+end
+
+function logAndPrint(logfile, msg)
+    timestamp = Dates.now()
+    stampedMessage = "[$(Dates.format(timestamp, "yyyy-mm-dd HH:MM:SS"))] $msg"
+    println(stampedMessage)
+    write(logfile, stampedMessage * "\n")
 end

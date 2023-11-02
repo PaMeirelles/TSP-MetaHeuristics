@@ -1,7 +1,9 @@
 using TSPLIB
 using UnionFind
+using Printf
+using Dates
 
-DEBUG = true
+DEBUG = false
 
 include("src/ConstructiveSolution.jl")
 include("src/Solution.jl")
@@ -10,45 +12,13 @@ include("src/Utils.jl")
 include("src/TwoOpt.jl")
 include("src/Relocate.jl")
 include("src/Benchmark.jl")
+include("src/ShuffleSublist.jl")
+include("src/StageDisturb.jl")
 
-function testCase(instance::TSP)
-    sol, cost = basicGreedy(instance)
-    @info "Basic greedy solution" sol cost
-    neighbour = TwoOpt(instance, Solution(sol, cost))
-    bestImprovement!(neighbour)
-    updateCost!(neighbour.solution, neighbour.data.weights)
-    @info "Best Improvement solution" neighbour.solution.route neighbour.solution.cost
+instance = readTSPLIB(:ch130)
 
-    if (abs(neighbour.solution.cost - instance.optimal) < 1e-5)
-        @info "Solution is optimal"
-    else
-        @warn "Solution is not optimal"
-    end
-end
+sol = basicGreedy(instance)
+sd = StageDisturb(instance, sol, [TwoOpt(instance, sol), Swap(instance, sol), Relocate(instance, sol)], 0, [250, 1000, 4000],
+ [simple_shuffle!, shuffle_and_move!, full_shuffle!], 40)
 
-instance = readTSPLIB(:eil101)
-# testCase(instance)
-
-
-solution = basicGreedy(instance)
-# @info "Basic greedy solution" solution.route solution.cost
-
-# solution = randomPath(instance)
-# @info "Random Path" solution.route solution.cost
-
-# cheap = cheapestInsertion(instance)
-# @info "Cheapest Insertion" cheap.route cheap.cost
-
-n1 = Swap(instance, basicGreedy(instance))    
-n2 = Swap(instance, basicGreedy(instance))   
-n3 = TwoOpt(instance, basicGreedy(instance))    
-n4 = TwoOpt(instance, basicGreedy(instance))  
-n5 = Relocate(instance, basicGreedy(instance))    
-n6 = Relocate(instance, basicGreedy(instance))  
-
-benchmark(firstImprovement!, n1)
-benchmark(bestImprovement!, n2)
-benchmark(firstImprovement!, n3)
-benchmark(bestImprovement!, n4)
-benchmark(firstImprovement!, n5)
-benchmark(bestImprovement!, n6)
+iteratedLocalSearch(sd)

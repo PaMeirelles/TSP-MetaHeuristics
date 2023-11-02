@@ -15,7 +15,7 @@ include("src/Benchmark.jl")
 include("src/ShuffleSublist.jl")
 include("src/StageDisturb.jl")
 
-instance = readTSPLIB(:eil76)
+instance = readTSPLIB(:ch130)
 
 sol = basicGreedy(instance)
 sd = StageDisturb(instance, sol, [TwoOpt(instance, sol), Swap(instance, sol), Relocate(instance, sol)], 0, [250, 1000, 4000],

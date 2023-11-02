@@ -61,9 +61,9 @@ mutable struct StageDisturb
             end
         end
         updateCost!(sol, instance.weights)
-        
+        copy = deepcopy(sol)
         for ns in stageDisturb.neighbourSearch
-            ns.solution = deepcopy(sol)
+            ns.solution = copy
         end
 
         stageDisturb.currentIteration += 1
